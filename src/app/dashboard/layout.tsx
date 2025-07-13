@@ -1,3 +1,5 @@
+'use client'
+
 import { SidebarNav } from "@/components/dashboard/SidebarNav";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { usePathname } from 'next/navigation';
