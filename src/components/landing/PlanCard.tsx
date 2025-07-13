@@ -34,7 +34,7 @@ export function PlanCard({ title, price, period, description, features }: PlanPr
       </CardContent>
       <CardFooter>
         <Button className="w-full" asChild>
-            <Link href="/dashboard">Get Plan</Link>
+            <Link href={`/dashboard/payment?plan=${encodeURIComponent(title)}&price=${encodeURIComponent(price)}&period=${encodeURIComponent(period)}`}>Get Plan</Link>
         </Button>
       </CardFooter>
     </Card>

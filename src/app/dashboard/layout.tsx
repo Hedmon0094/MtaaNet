@@ -1,11 +1,18 @@
 import { SidebarNav } from "@/components/dashboard/SidebarNav";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { usePathname } from 'next/navigation';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const isPaymentPage = usePathname() === '/dashboard/payment';
+
+  if (isPaymentPage) {
+    return <main>{children}</main>;
+  }
+  
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarNav />
