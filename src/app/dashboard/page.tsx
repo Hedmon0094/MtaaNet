@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { UsageChart } from "@/components/dashboard/UsageChart";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
+import { PayByLinkButton } from "@/components/dashboard/PayByLinkButton";
 
 const payments = [
   { id: 'INV001', date: '2024-07-15', plan: 'Weekly Pass', amount: 'KES 300', status: 'Paid' },
@@ -41,7 +43,7 @@ export default function DashboardPage() {
             <CardDescription>Generate a payment link.</CardDescription>
           </CardHeader>
           <CardContent>
-             <Button className="w-full">Generate Link</Button>
+             <PayByLinkButton />
           </CardContent>
         </Card>
          <Card>

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { PanelLeft, Wifi, Home, BrainCircuit, Settings } from 'lucide-react'
+import { PanelLeft, Wifi, Home, BrainCircuit, Settings, LifeBuoy } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -25,9 +25,13 @@ export function DashboardHeader() {
               <Home className="h-5 w-5" />
               Dashboard
             </Link>
-            <Link href="/dashboard/optimize" className="flex items-center gap-4 px-2.5 text-foreground">
+            <Link href="/dashboard/optimize" className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
               <BrainCircuit className="h-5 w-5" />
               Hotspot Optimizer
+            </Link>
+             <Link href="/dashboard/support" className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
+              <LifeBuoy className="h-5 w-5" />
+              Support
             </Link>
             <Link href="#" className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
               <Settings className="h-5 w-5" />

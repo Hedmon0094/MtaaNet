@@ -41,7 +41,10 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32">
+        <section className="relative w-full py-12 md:py-24 lg:py-32 overflow-hidden">
+          <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
+            <div className="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,hsl(var(--background)),transparent)]"></div>
+          </div>
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
               <div className="flex flex-col justify-center space-y-4">
@@ -145,7 +148,7 @@ export default function Home() {
             </div>
             <div className="mx-auto w-full max-w-sm space-y-2">
               <Button type="submit" size="lg" asChild>
-                <Link href="/dashboard">Contact Support</Link>
+                <Link href="/dashboard/support">Contact Support</Link>
               </Button>
             </div>
           </div>

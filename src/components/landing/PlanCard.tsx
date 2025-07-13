@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
+import Link from "next/link";
 
 type PlanProps = {
   title: string;
@@ -32,7 +33,9 @@ export function PlanCard({ title, price, period, description, features }: PlanPr
         </ul>
       </CardContent>
       <CardFooter>
-        <Button className="w-full">Get Plan</Button>
+        <Button className="w-full" asChild>
+            <Link href="/dashboard">Get Plan</Link>
+        </Button>
       </CardFooter>
     </Card>
   );
