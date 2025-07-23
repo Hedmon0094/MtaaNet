@@ -12,7 +12,7 @@ export default function LoginPage() {
             <Link href="/" className="flex items-center justify-center gap-2 mb-4">
                 <Wifi className="h-8 w-8 text-primary" />
             </Link>
-            <CardTitle className="font-headline text-2xl">Welcome Back!</CardTitle>
+            <CardTitle className="font-headline text-2xl">Welcome <span className="text-primary">Back!</span></CardTitle>
             <CardDescription>Log in to your MtaaNet account to continue.</CardDescription>
           </CardHeader>
           <CardContent>

@@ -23,7 +23,7 @@ export default function DashboardPage() {
             <CardDescription>Your active internet package.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">Weekly Pass</div>
+            <div className="text-3xl font-bold text-primary">Weekly Pass</div>
             <p className="text-xs text-muted-foreground">Expires on 2024-07-22</p>
           </CardContent>
         </Card>

@@ -50,7 +50,7 @@ export default function Home() {
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-headline">
-                    Fast, Affordable Internet for Your Mtaa
+                    Fast, Affordable Internet for Your <span className="text-primary">Mtaa</span>
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
                     MtaaNet provides reliable community Wi-Fi with flexible plans. Get connected in minutes with our easy payment options.
@@ -82,7 +82,7 @@ export default function Home() {
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">Key Features</div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">How MtaaNet Works for You</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">How <span className="text-primary">MtaaNet</span> Works for You</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   We've built a seamless experience from payment to connection, with features designed for our communities.
                 </p>
@@ -124,7 +124,7 @@ export default function Home() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">Choose Your Plan</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">Choose Your <span className="text-primary">Plan</span></h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Simple, transparent pricing. Pick the plan that fits your needs and get connected today.
                 </p>
@@ -141,7 +141,7 @@ export default function Home() {
         <section id="support" className="w-full py-12 md:py-24 lg:py-32 bg-card">
           <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
             <div className="space-y-3">
-              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight font-headline">Need Help? We're Here for You.</h2>
+              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight font-headline">Need Help? We're Here for <span className="text-primary">You</span>.</h2>
               <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Got a question or an issue? Our support team is ready to assist.
               </p>

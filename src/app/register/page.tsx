@@ -12,7 +12,7 @@ export default function RegisterPage() {
              <Link href="/" className="flex items-center justify-center gap-2 mb-4">
                 <Wifi className="h-8 w-8 text-primary" />
             </Link>
-            <CardTitle className="font-headline text-2xl">Create Your Account</CardTitle>
+            <CardTitle className="font-headline text-2xl">Create Your <span className="text-primary">Account</span></CardTitle>
             <CardDescription>Join the MtaaNet community today!</CardDescription>
           </CardHeader>
           <CardContent>
