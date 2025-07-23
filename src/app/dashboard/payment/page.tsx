@@ -1,10 +1,12 @@
 'use client'
 
+import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CreditCard, Smartphone, Banknote, Bitcoin, ArrowLeft } from 'lucide-react';
+import { CreditCard, Smartphone, Banknote, Bitcoin, ArrowLeft, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 const paymentMethods = [
   {
@@ -34,6 +36,12 @@ export default function PaymentPage() {
   const plan = searchParams.get('plan') || 'N/A';
   const price = searchParams.get('price') || 'N/A';
   const period = searchParams.get('period') || 'N/A';
+  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
+
+  const handlePayment = () => {
+    // Implement payment logic here based on selectedMethod
+    alert(`Proceeding to pay for ${plan} with ${selectedMethod}`);
+  }
 
   return (
     <div className="container mx-auto py-8">
@@ -53,15 +61,23 @@ export default function PaymentPage() {
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {paymentMethods.map((method) => (
-                  <Button
+                  <div
                     key={method.name}
-                    variant="outline"
-                    className="h-auto p-4 flex flex-col items-center justify-center gap-2 rounded-lg border-2 hover:border-primary hover:bg-accent transition-all duration-200"
+                    className={cn(
+                      "relative rounded-lg border p-4 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-200 hover:shadow-md",
+                      selectedMethod === method.name ? 'border-primary border-2 bg-primary/5' : 'border'
+                    )}
+                    onClick={() => setSelectedMethod(method.name)}
                   >
+                    {selectedMethod === method.name && (
+                        <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+                            <CheckCircle className="h-5 w-5" />
+                        </div>
+                    )}
                     {method.icon}
                     <span className="font-semibold">{method.name}</span>
-                    <span className="text-xs text-muted-foreground">{method.description}</span>
-                  </Button>
+                    <span className="text-xs text-center text-muted-foreground">{method.description}</span>
+                  </div>
                 ))}
               </div>
             </CardContent>
@@ -69,7 +85,7 @@ export default function PaymentPage() {
         </div>
 
         <div className="md:col-span-1">
-          <Card className="sticky top-24">
+          <Card className="sticky top-24 shadow-sm border">
             <CardHeader>
               <CardTitle className="font-headline">Order Summary</CardTitle>
             </CardHeader>
@@ -91,8 +107,8 @@ export default function PaymentPage() {
                   <span className="font-semibold">Total</span>
                   <span className="font-bold text-primary">{price}</span>
                 </div>
-                <Button className="w-full">
-                  Proceed to Payment
+                <Button className="w-full" disabled={!selectedMethod} onClick={handlePayment}>
+                  {selectedMethod ? `Pay with ${selectedMethod}` : 'Select a Payment Method'}
                 </Button>
               </div>
             </CardContent>
