@@ -54,7 +54,7 @@ export function DashboardHeader() {
                 width={36}
                 height={36}
                 alt="Avatar"
-                className="overflow-hidden"
+                className="overflow-hidden rounded-full"
                 data-ai-hint="user avatar"
               />
             </Button>
