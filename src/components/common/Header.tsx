@@ -11,22 +11,22 @@ export default function Header() {
           <span className="font-bold text-lg font-headline">MtaaNet</span>
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <Link href="#features" className="text-muted-foreground transition-colors hover:text-foreground">
+          <Link href="/#features" className="text-muted-foreground transition-colors hover:text-foreground">
             Features
           </Link>
-          <Link href="#pricing" className="text-muted-foreground transition-colors hover:text-foreground">
+          <Link href="/#pricing" className="text-muted-foreground transition-colors hover:text-foreground">
             Pricing
           </Link>
-          <Link href="#support" className="text-muted-foreground transition-colors hover:text-foreground">
+          <Link href="/dashboard/support" className="text-muted-foreground transition-colors hover:text-foreground">
             Support
           </Link>
         </nav>
         <div className="flex items-center gap-4">
           <Button variant="ghost" asChild>
-            <Link href="/dashboard">Log In</Link>
+            <Link href="/login">Log In</Link>
           </Button>
           <Button asChild>
-            <Link href="/dashboard">Get Started</Link>
+            <Link href="/register">Get Started</Link>
           </Button>
         </div>
       </div>
