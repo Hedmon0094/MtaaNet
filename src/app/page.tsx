@@ -4,6 +4,7 @@ import { PlanCard } from '@/components/landing/PlanCard';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
+import { StarRating } from '@/components/landing/StarRating';
 
 const plans = [
   {
@@ -11,7 +12,11 @@ const plans = [
     price: 'KES 20',
     period: '2 hrs',
     description: 'Perfect for quick tasks and browsing.',
-    features: ['High-speed internet', 'Single device access', '2-hour validity'],
+    features: [
+      { text: 'High-speed internet', icon: 'Wifi' },
+      { text: 'Single device access', icon: 'Smartphone' },
+      { text: '2-hour validity', icon: 'Clock' },
+    ],
     isFeatured: false,
   },
   {
@@ -19,7 +24,12 @@ const plans = [
     price: 'KES 50',
     period: 'day',
     description: 'All-day access for work or entertainment.',
-    features: ['High-speed internet', 'Up to 2 devices', '24-hour validity', 'Email support'],
+    features: [
+      { text: 'High-speed internet', icon: 'Wifi' },
+      { text: 'Up to 2 devices', icon: 'Users' },
+      { text: '24-hour validity', icon: 'Clock' },
+      { text: 'Email support', icon: 'Mail' },
+    ],
     isFeatured: false,
   },
   {
@@ -27,7 +37,12 @@ const plans = [
     price: 'KES 300',
     period: 'week',
     description: 'A full week of uninterrupted connectivity.',
-    features: ['High-speed internet', 'Up to 3 devices', '7-day validity', 'Priority support'],
+    features: [
+      { text: 'High-speed internet', icon: 'Wifi' },
+      { text: 'Up to 3 devices', icon: 'Users' },
+      { text: '7-day validity', icon: 'Calendar' },
+      { text: 'Priority support', icon: 'Star' },
+    ],
     isFeatured: true,
   },
   {
@@ -35,7 +50,12 @@ const plans = [
     price: 'KES 1000',
     period: 'month',
     description: 'Best value for long-term users.',
-    features: ['Unlimited high-speed internet', 'Up to 5 devices', '30-day validity', '24/7 priority support'],
+    features: [
+      { text: 'Unlimited high-speed internet', icon: 'Zap' },
+      { text: 'Up to 5 devices', icon: 'Users' },
+      { text: '30-day validity', icon: 'Calendar' },
+      { text: '24/7 priority support', icon: 'ShieldCheck' },
+    ],
     isFeatured: false,
   },
 ];
@@ -138,6 +158,10 @@ export default function Home() {
               {plans.map((plan) => (
                 <PlanCard key={plan.title} {...plan} />
               ))}
+            </div>
+            <div className="mt-12 flex flex-col items-center justify-center gap-2">
+                <StarRating />
+                <p className="text-sm text-muted-foreground">Trusted by over 1,000+ happy users</p>
             </div>
           </div>
         </section>

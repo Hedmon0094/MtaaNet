@@ -1,18 +1,35 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, Star } from "lucide-react";
+import { Star, Wifi, Smartphone, Users, Clock, Mail, Calendar, Zap, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+
+type Feature = {
+  text: string;
+  icon: keyof typeof ICONS;
+};
 
 type PlanProps = {
   title: string;
   price: string;
   period: string;
   description: string;
-  features: string[];
+  features: Feature[];
   isFeatured?: boolean;
 };
+
+const ICONS = {
+    Wifi: Wifi,
+    Smartphone: Smartphone,
+    Users: Users,
+    Clock: Clock,
+    Mail: Mail,
+    Calendar: Calendar,
+    Zap: Zap,
+    ShieldCheck: ShieldCheck,
+    Star: Star
+} as const;
 
 export function PlanCard({ title, price, period, description, features, isFeatured = false }: PlanProps) {
   return (
@@ -36,12 +53,15 @@ export function PlanCard({ title, price, period, description, features, isFeatur
             <span className="text-muted-foreground">/{period}</span>
         </div>
         <ul className="mt-6 space-y-2">
-            {features.map((feature, i) => (
-                <li key={i} className="flex items-center gap-2 text-sm">
-                    <Check className="h-4 w-4 text-primary" />
-                    <span>{feature}</span>
-                </li>
-            ))}
+            {features.map(({text, icon}) => {
+                const Icon = ICONS[icon];
+                return (
+                    <li key={text} className="flex items-center gap-3 text-sm">
+                        <Icon className="h-5 w-5 text-primary" />
+                        <span>{text}</span>
+                    </li>
+                );
+            })}
         </ul>
       </CardContent>
       <CardFooter>
