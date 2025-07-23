@@ -12,6 +12,7 @@ import { optimizeHotspotLocationsAction } from "@/app/dashboard/optimize/actions
 import type { OptimizeHotspotLocationsOutput } from "@/ai/flows/hotspot-location-optimizer"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Loader2, Wand2, MapPin, Focus } from "lucide-react"
+import { ReasoningDisplay } from "./ReasoningDisplay"
 
 const formSchema = z.object({
   targetArea: z.string().min(3, "Please enter a valid target area, e.g., 'Kibera' or 'Mathare'."),
@@ -173,15 +174,7 @@ export function HotspotOptimizerForm() {
                         ))}
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Reasoning</CardTitle>
-                        <CardDescription>The AI's justification for its suggestions.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="text-sm whitespace-pre-wrap">{result.reasoning}</p>
-                    </CardContent>
-                </Card>
+                <ReasoningDisplay reasoning={result.reasoning} />
             </div>
         </div>
       )}
