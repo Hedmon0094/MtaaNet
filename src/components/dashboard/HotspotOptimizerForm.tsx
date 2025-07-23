@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from "react"
@@ -65,6 +66,9 @@ export function HotspotOptimizerForm() {
 
     try {
       const response = await optimizeHotspotLocationsAction(values)
+      if (response.error) {
+        throw new Error(response.error);
+      }
       if (response && response.suggestedLocations) {
         setResult(response)
         setMapUrl(getMapUrlForAllLocations(response.suggestedLocations))
@@ -72,11 +76,12 @@ export function HotspotOptimizerForm() {
         throw new Error("Received an empty or invalid response from the optimizer.")
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
       console.error("Optimization error:", error)
       toast({
         variant: "destructive",
         title: "Optimization Failed",
-        description: "An error occurred while analyzing the data. Please try again.",
+        description: errorMessage,
       })
     } finally {
       setIsLoading(false)
