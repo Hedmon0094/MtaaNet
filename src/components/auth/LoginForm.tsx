@@ -12,7 +12,7 @@ import { Loader2 } from "lucide-react"
 import Link from "next/link"
 
 const formSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address." }),
+  identifier: z.string().min(1, { message: "Please enter your email or phone number." }),
   password: z.string().min(1, { message: "Password is required." }),
 })
 
@@ -23,7 +23,7 @@ export function LoginForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      identifier: "",
       password: "",
     },
   })
@@ -46,12 +46,12 @@ export function LoginForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="email"
+          name="identifier"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email Address</FormLabel>
+              <FormLabel>Email or Phone Number</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="you@example.com" {...field} />
+                <Input placeholder="you@example.com or 0712345678" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

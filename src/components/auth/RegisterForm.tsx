@@ -13,6 +13,7 @@ import { Loader2 } from "lucide-react"
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Full name must be at least 2 characters." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
+  phoneNumber: z.string().min(10, { message: "Please enter a valid phone number." }),
   password: z.string().min(8, { message: "Password must be at least 8 characters." }),
   confirmPassword: z.string()
 }).refine(data => data.password === data.confirmPassword, {
@@ -30,6 +31,7 @@ export function RegisterForm() {
     defaultValues: {
       fullName: "",
       email: "",
+      phoneNumber: "",
       password: "",
       confirmPassword: ""
     },
@@ -71,6 +73,19 @@ export function RegisterForm() {
               <FormLabel>Email Address</FormLabel>
               <FormControl>
                 <Input type="email" placeholder="you@example.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="phoneNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Phone Number</FormLabel>
+              <FormControl>
+                <Input type="tel" placeholder="0712345678" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
