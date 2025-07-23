@@ -12,6 +12,7 @@ const plans = [
     period: '2 hrs',
     description: 'Perfect for quick tasks and browsing.',
     features: ['High-speed internet', 'Single device access', '2-hour validity'],
+    isFeatured: false,
   },
   {
     title: 'Daily Pass',
@@ -19,6 +20,7 @@ const plans = [
     period: 'day',
     description: 'All-day access for work or entertainment.',
     features: ['High-speed internet', 'Up to 2 devices', '24-hour validity', 'Email support'],
+    isFeatured: false,
   },
   {
     title: 'Weekly Pass',
@@ -26,6 +28,7 @@ const plans = [
     period: 'week',
     description: 'A full week of uninterrupted connectivity.',
     features: ['High-speed internet', 'Up to 3 devices', '7-day validity', 'Priority support'],
+    isFeatured: true,
   },
   {
     title: 'Monthly Pass',
@@ -33,6 +36,7 @@ const plans = [
     period: 'month',
     description: 'Best value for long-term users.',
     features: ['Unlimited high-speed internet', 'Up to 5 devices', '30-day validity', '24/7 priority support'],
+    isFeatured: false,
   },
 ];
 
@@ -130,7 +134,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-sm gap-8 pt-12 sm:max-w-none sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mx-auto grid max-w-sm gap-8 pt-12 sm:max-w-none sm:grid-cols-2 lg:grid-cols-4 items-center">
               {plans.map((plan) => (
                 <PlanCard key={plan.title} {...plan} />
               ))}
