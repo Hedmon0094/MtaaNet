@@ -50,6 +50,31 @@ export function HotspotOptimizerForm() {
       setIsLoading(false)
     }
   }
+  
+  const getMapUrl = () => {
+    if (!result || !result.suggestedLocations || result.suggestedLocations.length === 0) {
+      return "";
+    }
+
+    const locations = result.suggestedLocations;
+    const markers = locations.map(loc => `marker=${loc.lat},${loc.lng}`).join('&');
+    
+    // Calculate bounding box
+    const lats = locations.map(l => l.lat);
+    const lngs = locations.map(l => l.lng);
+    const minLat = Math.min(...lats);
+    const maxLat = Math.max(...lats);
+    const minLng = Math.min(...lngs);
+    const maxLng = Math.max(...lngs);
+    
+    // Add some padding to the bounding box
+    const latPadding = (maxLat - minLat) * 0.1;
+    const lngPadding = (maxLng - minLng) * 0.1;
+
+    const bbox = `${minLng - lngPadding},${minLat - latPadding},${maxLng + lngPadding},${maxLat + latPadding}`;
+
+    return `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&${markers}`;
+  }
 
   return (
     <div>
@@ -61,8 +86,7 @@ export function HotspotOptimizerForm() {
               name="targetArea"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Target Area</FormLabel>
-                   <FormControl>
+                  <FormLabel>Target Area</FormLabel>                   <FormControl>
                     <Input placeholder="e.g., Kibera, Mathare, etc." {...field} />
                   </FormControl>
                   <FormMessage />
@@ -96,6 +120,22 @@ export function HotspotOptimizerForm() {
       {result && (
         <div className="mt-12 space-y-8">
             <h3 className="text-xl font-bold font-headline">Optimization Results</h3>
+             <Card>
+                <CardHeader>
+                    <CardTitle>Map View</CardTitle>
+                    <CardDescription>Visual representation of suggested hotspot locations.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <iframe
+                        width="100%"
+                        height="450"
+                        className="rounded-lg border"
+                        src={getMapUrl()}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                    ></iframe>
+                </CardContent>
+            </Card>
             <div className="grid md:grid-cols-2 gap-8">
                 <Card>
                     <CardHeader>
