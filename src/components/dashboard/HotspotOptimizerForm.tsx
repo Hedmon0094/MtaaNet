@@ -67,15 +67,20 @@ export function HotspotOptimizerForm() {
     try {
       const response = await optimizeHotspotLocationsAction(values)
       if (response.error) {
-        // This will be caught by the catch block below
-        throw new Error(response.error);
-      }
-      if (response && response.suggestedLocations) {
+        toast({
+            variant: "destructive",
+            title: "Optimization Failed",
+            description: response.error,
+        });
+      } else if (response && response.suggestedLocations) {
         setResult(response)
         setMapUrl(getMapUrlForAllLocations(response.suggestedLocations))
       } else {
-        // This will be caught by the catch block below
-        throw new Error("Received an empty or invalid response from the optimizer.")
+        toast({
+            variant: "destructive",
+            title: "Optimization Failed",
+            description: "Received an empty or invalid response from the optimizer.",
+        });
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
