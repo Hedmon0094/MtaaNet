@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useState } from "react"
 import { Loader2 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
   identifier: z.string().min(1, { message: "Please enter your email or phone number." }),
@@ -19,6 +20,7 @@ const formSchema = z.object({
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,7 +39,7 @@ export function LoginForm() {
         description: "Redirecting you to your dashboard.",
       })
       setIsLoading(false)
-       // You can redirect the user here e.g., using window.location.href = '/dashboard'
+       router.push('/dashboard')
     }, 1500)
   }
 

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
 import { useState } from "react"
 import { Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Full name must be at least 2 characters." }),
@@ -25,6 +26,7 @@ const formSchema = z.object({
 export function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,10 +44,10 @@ export function RegisterForm() {
     setTimeout(() => {
         toast({
             title: "Account Created!",
-            description: "You have successfully registered.",
+            description: "You have successfully registered. Please log in.",
         })
         setIsLoading(false)
-        // You can redirect the user here e.g., using window.location.href = '/login'
+        router.push('/login')
     }, 1500)
   }
 
