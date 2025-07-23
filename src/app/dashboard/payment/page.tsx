@@ -1,12 +1,25 @@
+
 'use client'
 
 import { useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CreditCard, Smartphone, Banknote, Bitcoin, ArrowLeft, CheckCircle } from 'lucide-react';
+import { CreditCard, Smartphone, Banknote, Bitcoin, ArrowLeft, CheckCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { useToast } from '@/hooks/use-toast';
+
 
 const paymentMethods = [
   {
@@ -33,14 +46,33 @@ const paymentMethods = [
 
 export default function PaymentPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const { toast } = useToast();
   const plan = searchParams.get('plan') || 'N/A';
   const price = searchParams.get('price') || 'N/A';
   const period = searchParams.get('period') || 'N/A';
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handlePayment = () => {
-    // Implement payment logic here based on selectedMethod
-    alert(`Proceeding to pay for ${plan} with ${selectedMethod}`);
+  const handlePaymentClick = () => {
+    if (selectedMethod) {
+      setIsDialogOpen(true);
+    }
+  }
+  
+  const handleConfirmPayment = () => {
+    setIsProcessing(true);
+    // Simulate API call for payment processing
+    setTimeout(() => {
+        setIsProcessing(false);
+        setIsDialogOpen(false);
+        toast({
+            title: "Payment Successful!",
+            description: `Your payment for the ${plan} has been confirmed.`,
+        });
+        router.push('/dashboard');
+    }, 2000);
   }
 
   return (
@@ -107,7 +139,7 @@ export default function PaymentPage() {
                   <span className="font-semibold">Total</span>
                   <span className="font-bold text-primary">{price}</span>
                 </div>
-                <Button className="w-full" disabled={!selectedMethod} onClick={handlePayment}>
+                <Button className="w-full" disabled={!selectedMethod} onClick={handlePaymentClick}>
                   {selectedMethod ? `Pay with ${selectedMethod}` : 'Select a Payment Method'}
                 </Button>
               </div>
@@ -115,6 +147,23 @@ export default function PaymentPage() {
           </Card>
         </div>
       </div>
+       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Your Payment</AlertDialogTitle>
+            <AlertDialogDescription>
+              You are about to pay {price} for the {plan} using {selectedMethod}. Are you sure you want to proceed?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isProcessing}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmPayment} disabled={isProcessing}>
+              {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isProcessing ? "Processing..." : "Confirm Payment"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
