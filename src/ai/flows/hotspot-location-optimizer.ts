@@ -20,6 +20,7 @@ const MOCK_COMPETITOR_DATA: Record<string, {lat: number; lng: number}[]> = {
     {lat: -1.318, lng: 36.784},
   ],
   Mathare: [{lat: -1.264, lng: 36.852}],
+  Kakamega: [],
 };
 
 const MOCK_SIGNAL_STRENGTH: Record<string, Record<string, number>> = {
@@ -96,7 +97,7 @@ const OptimizeHotspotLocationsOutputSchema = z.object({
   reasoning: z
     .string()
     .describe(
-      'The AI’s reasoning for suggesting these locations, based on the input data and tool outputs.'
+      'The AI’s reasoning for suggesting these locations, based on the input data and tool outputs. This should be a well-structured report.'
     ),
 });
 export type OptimizeHotspotLocationsOutput = z.infer<
@@ -116,16 +117,41 @@ const prompt = ai.definePrompt({
   tools: [getCompetitorHotspots, getSignalStrength],
   prompt: `You are an expert in telecommunications network optimization for community Wi-Fi in Kenya. 
   
-Your goal is to suggest 3 to 5 optimal locations for deploying new MtaaNet hotspots in the user's target area.
+Your goal is to suggest 3 to 5 optimal locations for deploying new MtaaNet hotspots in the user's target area: '{{{targetArea}}}'.
 
-Analyze the user's request for the target area: '{{{targetArea}}}'.
+After identifying the best locations, you must generate a structured report in the 'reasoning' field.
 
-Follow these steps:
+Follow these steps for your analysis:
 1.  Use the getCompetitorHotspots tool to identify where competitors are already located. We want to avoid placing our hotspots right next to theirs unless there's a very high population density.
 2.  Use the getSignalStrength tool to check our existing network coverage at key points of interest within the area. Prioritize locations with weak signal strength (below 0.5).
 3.  Based on the data from the tools and your general knowledge of urban planning in Kenya, identify locations that are central, have high foot traffic (like markets, bus stops, community centers), and are underserved by existing coverage.
-4.  Provide a list of suggested locations with their names and precise latitude/longitude coordinates.
-5.  Finally, provide a detailed reasoning for your choices, referencing the data you gathered from the tools.`,
+4.  Provide a list of suggested locations with their names and precise latitude/longitude coordinates in the 'suggestedLocations' output field.
+5.  Finally, structure the 'reasoning' output field as a report with the following format, using Markdown for formatting:
+
+📍 **Selected Locations & Rationale**
+
+*   **[Location Name 1]**
+    *   **Reason**: [Brief justification for choosing this location, e.g., High foot traffic from daily shoppers and traders.]
+    *   **Benefit**: [The primary advantage of this location, e.g., Strong potential for user volume and data usage throughout the day.]
+*   **[Location Name 2]**
+    *   **Reason**: [Brief justification]
+    *   **Benefit**: [Primary advantage]
+*   ...and so on for all suggested locations.
+
+🔍 **Considerations & Recommendations**
+
+*   **Data Limitations**: Due to limited access to real-time competitor coverage or MtaaNet signal strength, assumptions are based on location type and expected traffic patterns.
+*   **Action Point**: Recommend on-site signal surveys and user flow mapping to:
+    *   Confirm foot traffic volumes
+    *   Assess signal penetration and dead zones
+    *   Identify competitor presence
+
+✅ **Next Steps**
+
+*   Prioritize on-the-ground validation at each location.
+*   Map Wi-Fi coverage areas with a focus on maximizing public access while minimizing overlap.
+*   Consider scalable infrastructure depending on performance data post-rollout.
+`,
 });
 
 const optimizeHotspotLocationsFlow = ai.defineFlow(
