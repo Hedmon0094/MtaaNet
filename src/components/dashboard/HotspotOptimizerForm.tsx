@@ -6,18 +6,15 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
 import { optimizeHotspotLocationsAction } from "@/app/dashboard/optimize/actions"
 import type { OptimizeHotspotLocationsOutput } from "@/ai/flows/hotspot-location-optimizer"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, Wand2 } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Loader2, Wand2, MapPin } from "lucide-react"
 
 const formSchema = z.object({
-  populationDensityData: z.string().min(10, "Please provide more details on population density."),
-  usagePatternsData: z.string().min(10, "Please provide more details on usage patterns."),
-  networkCoverageData: z.string().min(10, "Please provide more details on network coverage."),
-  existingHotspotLocations: z.string().min(10, "Please list existing hotspot locations."),
+  targetArea: z.string().min(3, "Please enter a valid target area, e.g., 'Kibera' or 'Mathare'."),
 })
 
 export function HotspotOptimizerForm() {
@@ -28,10 +25,7 @@ export function HotspotOptimizerForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      populationDensityData: "",
-      usagePatternsData: "",
-      networkCoverageData: "",
-      existingHotspotLocations: "",
+      targetArea: "",
     },
   })
 
@@ -40,10 +34,10 @@ export function HotspotOptimizerForm() {
     setResult(null)
     try {
       const response = await optimizeHotspotLocationsAction(values)
-      if (response) {
+      if (response && response.suggestedLocations) {
         setResult(response)
       } else {
-        throw new Error("Received an empty response from the optimizer.")
+        throw new Error("Received an empty or invalid response from the optimizer.")
       }
     } catch (error) {
       console.error("Optimization error:", error)
@@ -61,54 +55,15 @@ export function HotspotOptimizerForm() {
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="max-w-md">
             <FormField
               control={form.control}
-              name="populationDensityData"
+              name="targetArea"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Population Density Data</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="e.g., High density in Market area, low in residential Zone B..." {...field} rows={4} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="usagePatternsData"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Usage Patterns Data</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="e.g., Peak usage from 6 PM to 10 PM. High demand near the bus station..." {...field} rows={4} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="networkCoverageData"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Network Coverage Data</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="e.g., Weak signal in the southern part of the estate. No coverage past the river..." {...field} rows={4} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="existingHotspotLocations"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Existing Hotspot Locations</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="e.g., Main gate, shopping complex rooftop, community hall..." {...field} rows={4} />
+                  <FormLabel>Target Area</FormLabel>
+                   <FormControl>
+                    <Input placeholder="e.g., Kibera, Mathare, etc." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -134,7 +89,7 @@ export function HotspotOptimizerForm() {
       {isLoading && (
          <div className="mt-12 text-center">
             <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
-            <p className="mt-2 text-muted-foreground">AI is analyzing the data...</p>
+            <p className="mt-2 text-muted-foreground">AI is analyzing the data using its tools...</p>
          </div>
       )}
 
@@ -145,14 +100,26 @@ export function HotspotOptimizerForm() {
                 <Card>
                     <CardHeader>
                         <CardTitle>Suggested Locations</CardTitle>
+                        <CardDescription>Recommended deployment points with coordinates.</CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <p className="text-sm whitespace-pre-wrap">{result.suggestedLocations}</p>
+                    <CardContent className="space-y-4">
+                        {result.suggestedLocations.map((location) => (
+                           <div key={location.name} className="flex items-start gap-4 p-3 rounded-lg bg-muted/50">
+                                <MapPin className="h-6 w-6 text-primary mt-1" />
+                                <div>
+                                    <p className="font-semibold">{location.name}</p>
+                                    <p className="text-xs text-muted-foreground">
+                                        Lat: {location.lat.toFixed(4)}, Lng: {location.lng.toFixed(4)}
+                                    </p>
+                                </div>
+                           </div>
+                        ))}
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader>
                         <CardTitle>Reasoning</CardTitle>
+                        <CardDescription>The AI's justification for its suggestions.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <p className="text-sm whitespace-pre-wrap">{result.reasoning}</p>

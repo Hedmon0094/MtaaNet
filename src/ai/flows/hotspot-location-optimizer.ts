@@ -13,19 +13,71 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
+// MOCK DATA - In a real app, this would come from a database or external API.
+const MOCK_COMPETITOR_DATA: Record<string, {lat: number; lng: number}[]> = {
+  Kibera: [
+    {lat: -1.314, lng: 36.786},
+    {lat: -1.318, lng: 36.784},
+  ],
+  Mathare: [{lat: -1.264, lng: 36.852}],
+};
+
+const MOCK_SIGNAL_STRENGTH: Record<string, Record<string, number>> = {
+  Kibera: {
+    'Plaza': 0.85,
+    'Market': 0.6,
+    'West-Gate': 0.3
+  }
+}
+
+/**
+ * Tool to get competitor hotspot locations for a given area.
+ * The LLM will use this to understand the competitive landscape.
+ */
+const getCompetitorHotspots = ai.defineTool(
+  {
+    name: 'getCompetitorHotspots',
+    description: 'Get the latitude and longitude of competitor Wi-Fi hotspots in a specified area.',
+    inputSchema: z.object({
+      area: z.string().describe('The neighborhood or area to search for competitor hotspots.'),
+    }),
+    outputSchema: z.array(z.object({lat: z.number(), lng: z.number()})),
+  },
+  async ({area}) => {
+    console.log(`Searching for competitor hotspots in: ${area}`);
+    return MOCK_COMPETITOR_DATA[area] || [];
+  }
+);
+
+
+/**
+ * Tool to check the signal strength of our own network at a specific point.
+ * The LLM can use this to identify areas with poor coverage.
+ */
+const getSignalStrength = ai.defineTool(
+  {
+    name: 'getSignalStrength',
+    description: 'Check the MtaaNet signal strength at a specific point of interest.',
+    inputSchema: z.object({
+      pointOfInterest: z.string().describe('The landmark or point of interest to check.'),
+      area: z.string().describe('The general area or neighborhood.'),
+    }),
+    outputSchema: z.object({
+      strength: z
+        .number()
+        .describe('Signal strength from 0.0 (no signal) to 1.0 (excellent).'),
+    }),
+  },
+  async ({pointOfInterest, area}) => {
+    console.log(`Checking signal strength at: ${pointOfInterest} in ${area}`);
+    const strength = MOCK_SIGNAL_STRENGTH[area]?.[pointOfInterest] ?? Math.random() * 0.5;
+    return {strength};
+  }
+);
+
+
 const OptimizeHotspotLocationsInputSchema = z.object({
-  populationDensityData: z
-    .string()
-    .describe('Data on population density in the target area.'),
-  usagePatternsData: z
-    .string()
-    .describe('Data on current network usage patterns.'),
-  networkCoverageData: z
-    .string()
-    .describe('Data on existing network coverage.'),
-  existingHotspotLocations: z
-    .string()
-    .describe('A list of the data of existing hotspot locations.'),
+  targetArea: z.string().describe('The target neighborhood or area for deployment.'),
 });
 export type OptimizeHotspotLocationsInput = z.infer<
   typeof OptimizeHotspotLocationsInputSchema
@@ -33,14 +85,18 @@ export type OptimizeHotspotLocationsInput = z.infer<
 
 const OptimizeHotspotLocationsOutputSchema = z.object({
   suggestedLocations: z
-    .string()
-    .describe(
-      'A list of suggested optimal locations for new hotspot deployments.'
-    ),
+    .array(
+      z.object({
+        name: z.string().describe('The name or landmark for the suggested location.'),
+        lat: z.number().describe('The latitude of the suggested location.'),
+        lng: z.number().describe('The longitude of the suggested location.'),
+      })
+    )
+    .describe('A list of suggested optimal locations for new hotspot deployments.'),
   reasoning: z
     .string()
     .describe(
-      'The AI’s reasoning for suggesting these locations, based on the input data.'
+      'The AI’s reasoning for suggesting these locations, based on the input data and tool outputs.'
     ),
 });
 export type OptimizeHotspotLocationsOutput = z.infer<
@@ -57,14 +113,19 @@ const prompt = ai.definePrompt({
   name: 'optimizeHotspotLocationsPrompt',
   input: {schema: OptimizeHotspotLocationsInputSchema},
   output: {schema: OptimizeHotspotLocationsOutputSchema},
-  prompt: `You are an expert in telecommunications network optimization. Based on the provided data, suggest optimal locations for deploying new hotspots.  Consider population density, current usage patterns, existing network coverage, and current hotspot locations.
+  tools: [getCompetitorHotspots, getSignalStrength],
+  prompt: `You are an expert in telecommunications network optimization for community Wi-Fi in Kenya. 
+  
+Your goal is to suggest 3 to 5 optimal locations for deploying new MtaaNet hotspots in the user's target area.
 
-Population Density Data: {{{populationDensityData}}}
-Usage Patterns Data: {{{usagePatternsData}}}
-Network Coverage Data: {{{networkCoverageData}}}
-Existing Hotspot Locations: {{{existingHotspotLocations}}}
+Analyze the user's request for the target area: '{{{targetArea}}}'.
 
-Provide a list of suggested locations and a detailed explanation of your reasoning.`,
+Follow these steps:
+1.  Use the getCompetitorHotspots tool to identify where competitors are already located. We want to avoid placing our hotspots right next to theirs unless there's a very high population density.
+2.  Use the getSignalStrength tool to check our existing network coverage at key points of interest within the area. Prioritize locations with weak signal strength (below 0.5).
+3.  Based on the data from the tools and your general knowledge of urban planning in Kenya, identify locations that are central, have high foot traffic (like markets, bus stops, community centers), and are underserved by existing coverage.
+4.  Provide a list of suggested locations with their names and precise latitude/longitude coordinates.
+5.  Finally, provide a detailed reasoning for your choices, referencing the data you gathered from the tools.`,
 });
 
 const optimizeHotspotLocationsFlow = ai.defineFlow(
