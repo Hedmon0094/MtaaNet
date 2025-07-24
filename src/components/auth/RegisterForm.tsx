@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useState } from "react"
 import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { registerUser } from "@/app/register/actions"
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Full name must be at least 2 characters." }),
@@ -41,14 +42,24 @@ export function RegisterForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    setTimeout(() => {
+    
+    const result = await registerUser(values);
+
+    if (result.error) {
+        toast({
+            variant: "destructive",
+            title: "Registration Failed",
+            description: result.error,
+        });
+    } else {
         toast({
             title: "Account Created!",
             description: "You have successfully registered. Please log in.",
         })
-        setIsLoading(false)
         router.push('/login')
-    }, 1500)
+    }
+    
+    setIsLoading(false)
   }
 
   return (

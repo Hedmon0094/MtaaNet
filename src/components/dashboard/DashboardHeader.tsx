@@ -61,8 +61,8 @@ export function DashboardHeader() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>
-                <div className="font-bold">John Doe</div>
-                <div className="text-xs text-muted-foreground font-normal">john.doe@example.com</div>
+                <div className="font-bold">Kevin Njue</div>
+                <div className="text-xs text-muted-foreground font-normal">kevinjue@gmail.com</div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
