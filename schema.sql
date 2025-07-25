@@ -1,7 +1,3 @@
--- Create the main database
-CREATE DATABASE IF NOT EXISTS mtaanet;
-USE mtaanet;
-
 -- Users table for storing user credentials and information
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,

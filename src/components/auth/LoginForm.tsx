@@ -53,7 +53,7 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>Email or Phone Number</FormLabel>
               <FormControl>
-                <Input placeholder="you@example.com or 0712345678" {...field} />
+                <Input placeholder="hedmonachacha@gmail.com or 0712345678" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

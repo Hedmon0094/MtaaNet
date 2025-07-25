@@ -48,6 +48,8 @@ export async function registerUser(values: unknown) {
       hash,
       salt,
     ]);
+    
+    console.log(`Successfully registered user: ${email}`);
 
     return { success: 'Account created successfully!' };
   } catch (error) {
